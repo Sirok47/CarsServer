@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package protocol;
+option go_package = "github.com/protocolbuffers/protobuf/examples/go/tutorialpb";
+service Cars{
+  rpc CreateCar(carparams) returns(errmsg) {}
+  rpc GetCar(carparams) returns (carparams){}
+  rpc DeleteCar(carparams) returns (errmsg){}
+  rpc UpdateCar(carparams) returns (errmsg){}
+}
+
+message carparams {
+ string carbrand = 1;
+ int32 carnumber = 2;
+ int32 mileage = 3;
+ string cartype = 4;
+}
+
+message errmsg {
+  string error = 1;
+}
