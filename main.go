@@ -20,5 +20,8 @@ func main() {
 	srvobj := service.NewService(dbconn)
 	protocol.RegisterCarsServer(srv, srvobj)
 	l, _ := net.Listen("tcp", ":8080")
-	srv.Serve(l)
+	err = srv.Serve(l)
+	if err != nil {
+		fmt.Print(err)
+	}
 }
