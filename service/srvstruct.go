@@ -2,11 +2,11 @@ package service
 
 import (
 	"github.com/Sirok47/CarsServer/repository"
-	"github.com/jackc/pgx"
+	"github.com/jackc/pgx/v4"
 )
 
 type Cars struct {
-rps *repository.Cars
+	rps *repository.Cars
 }
 
 func NewService(db *pgx.Conn) *Cars {

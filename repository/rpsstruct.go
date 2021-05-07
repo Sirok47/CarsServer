@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/jackc/pgx"
+import "github.com/jackc/pgx/v4"
 
 type Cars struct {
 	db *pgx.Conn
