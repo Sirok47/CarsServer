@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/Sirok47/CarsServer/repository"
+	"CarsServer/repository"
 	"github.com/jackc/pgx/v4"
 )
 
