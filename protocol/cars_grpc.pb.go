@@ -18,10 +18,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CarsClient interface {
-	CreateCar(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Errmsg, error)
-	GetCar(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Carparams, error)
-	DeleteCar(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Errmsg, error)
-	UpdateCar(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Errmsg, error)
+	Create(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Errmsg, error)
+	Get(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Carparams, error)
+	Delete(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Errmsg, error)
+	Update(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Errmsg, error)
 }
 
 type carsClient struct {
@@ -32,7 +32,7 @@ func NewCarsClient(cc grpc.ClientConnInterface) CarsClient {
 	return &carsClient{cc}
 }
 
-func (c *carsClient) CreateCar(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Errmsg, error) {
+func (c *carsClient) Create(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Errmsg, error) {
 	out := new(Errmsg)
 	err := c.cc.Invoke(ctx, "/grpcpb.Cars/CreateCar", in, out, opts...)
 	if err != nil {
@@ -41,7 +41,7 @@ func (c *carsClient) CreateCar(ctx context.Context, in *Carparams, opts ...grpc.
 	return out, nil
 }
 
-func (c *carsClient) GetCar(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Carparams, error) {
+func (c *carsClient) Get(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Carparams, error) {
 	out := new(Carparams)
 	err := c.cc.Invoke(ctx, "/grpcpb.Cars/GetCar", in, out, opts...)
 	if err != nil {
@@ -50,7 +50,7 @@ func (c *carsClient) GetCar(ctx context.Context, in *Carparams, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *carsClient) DeleteCar(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Errmsg, error) {
+func (c *carsClient) Delete(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Errmsg, error) {
 	out := new(Errmsg)
 	err := c.cc.Invoke(ctx, "/grpcpb.Cars/DeleteCar", in, out, opts...)
 	if err != nil {
@@ -59,7 +59,7 @@ func (c *carsClient) DeleteCar(ctx context.Context, in *Carparams, opts ...grpc.
 	return out, nil
 }
 
-func (c *carsClient) UpdateCar(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Errmsg, error) {
+func (c *carsClient) Update(ctx context.Context, in *Carparams, opts ...grpc.CallOption) (*Errmsg, error) {
 	out := new(Errmsg)
 	err := c.cc.Invoke(ctx, "/grpcpb.Cars/UpdateCar", in, out, opts...)
 	if err != nil {
@@ -72,26 +72,26 @@ func (c *carsClient) UpdateCar(ctx context.Context, in *Carparams, opts ...grpc.
 // All implementations must embed UnimplementedCarsServer
 // for forward compatibility
 type CarsServer interface {
-	CreateCar(context.Context, *Carparams) (*Errmsg, error)
-	GetCar(context.Context, *Carparams) (*Carparams, error)
-	DeleteCar(context.Context, *Carparams) (*Errmsg, error)
-	UpdateCar(context.Context, *Carparams) (*Errmsg, error)
+	Create(context.Context, *Carparams) (*Errmsg, error)
+	Get(context.Context, *Carparams) (*Carparams, error)
+	Delete(context.Context, *Carparams) (*Errmsg, error)
+	Update(context.Context, *Carparams) (*Errmsg, error)
 }
 
 // UnimplementedCarsServer must be embedded to have forward compatible implementations.
 type UnimplementedCarsServer struct {
 }
 
-func (UnimplementedCarsServer) CreateCar(context.Context, *Carparams) (*Errmsg, error) {
+func (UnimplementedCarsServer) Create(context.Context, *Carparams) (*Errmsg, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCar not implemented")
 }
-func (UnimplementedCarsServer) GetCar(context.Context, *Carparams) (*Carparams, error) {
+func (UnimplementedCarsServer) Get(context.Context, *Carparams) (*Carparams, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCar not implemented")
 }
-func (UnimplementedCarsServer) DeleteCar(context.Context, *Carparams) (*Errmsg, error) {
+func (UnimplementedCarsServer) Delete(context.Context, *Carparams) (*Errmsg, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCar not implemented")
 }
-func (UnimplementedCarsServer) UpdateCar(context.Context, *Carparams) (*Errmsg, error) {
+func (UnimplementedCarsServer) Update(context.Context, *Carparams) (*Errmsg, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCar not implemented")
 }
 
@@ -112,14 +112,14 @@ func _Cars_CreateCar_Handler(srv interface{}, ctx context.Context, dec func(inte
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CarsServer).CreateCar(ctx, in)
+		return srv.(CarsServer).Create(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
 		FullMethod: "/grpcpb.Cars/CreateCar",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CarsServer).CreateCar(ctx, req.(*Carparams))
+		return srv.(CarsServer).Create(ctx, req.(*Carparams))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -130,14 +130,14 @@ func _Cars_GetCar_Handler(srv interface{}, ctx context.Context, dec func(interfa
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CarsServer).GetCar(ctx, in)
+		return srv.(CarsServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
 		FullMethod: "/grpcpb.Cars/GetCar",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CarsServer).GetCar(ctx, req.(*Carparams))
+		return srv.(CarsServer).Get(ctx, req.(*Carparams))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -148,14 +148,14 @@ func _Cars_DeleteCar_Handler(srv interface{}, ctx context.Context, dec func(inte
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CarsServer).DeleteCar(ctx, in)
+		return srv.(CarsServer).Delete(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
 		FullMethod: "/grpcpb.Cars/DeleteCar",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CarsServer).DeleteCar(ctx, req.(*Carparams))
+		return srv.(CarsServer).Delete(ctx, req.(*Carparams))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -166,14 +166,14 @@ func _Cars_UpdateCar_Handler(srv interface{}, ctx context.Context, dec func(inte
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CarsServer).UpdateCar(ctx, in)
+		return srv.(CarsServer).Update(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
 		FullMethod: "/grpcpb.Cars/UpdateCar",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CarsServer).UpdateCar(ctx, req.(*Carparams))
+		return srv.(CarsServer).Update(ctx, req.(*Carparams))
 	}
 	return interceptor(ctx, in, info, handler)
 }
