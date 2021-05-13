@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/Sirok47/CarsServer/protocol"
+	protocol "github.com/Sirok47/CarsServer/protocol"
 	"github.com/Sirok47/CarsServer/service"
 	"github.com/jackc/pgx/v4"
 	"google.golang.org/grpc"

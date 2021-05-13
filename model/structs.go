@@ -6,3 +6,8 @@ type CarParams struct {
 	CarType   string `json:"Type"`
 	Mileage   int    `json:"Mileage"`
 }
+
+type UserParams struct {
+	Nick     string `json:"Nick"`
+	Password string `json:"Password"`
+}

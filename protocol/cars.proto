@@ -3,10 +3,21 @@ syntax = "proto3";
 package protocol;
 option go_package = "github.com/protocolbuffers/protobuf/examples/go/tutorialpb";
 service Cars{
+  rpc LogIn(userdata) returns(token){}
+  rpc SignUp(userdata) returns(errmsg){}
   rpc Create(carparams) returns(errmsg) {}
   rpc Get(carparams) returns (carparams){}
   rpc Delete(carparams) returns (errmsg){}
   rpc Update(carparams) returns (errmsg){}
+}
+
+message token {
+  string Token = 1;
+}
+
+message userdata{
+  string Nick = 1;
+  string Password = 2;
 }
 
 message carparams {

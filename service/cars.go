@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"github.com/Sirok47/CarsServer/model"
-	"github.com/Sirok47/CarsServer/protocol"
+	protocol "github.com/Sirok47/CarsServer/protocol"
 	"github.com/Sirok47/CarsServer/repository"
 	"github.com/jackc/pgx/v4"
 )
@@ -14,6 +14,22 @@ type Cars struct {
 
 func NewService(db *pgx.Conn) *Cars {
 	return &Cars{repository.NewCars(db)}
+}
+
+func (c Cars) SignUp(ctx context.Context, prm *protocol.Userdata) (*protocol.Errmsg, error) {
+	err := c.rps.SignUp(ctx, model.UserParams{Nick: prm.Nick, Password: prm.Password})
+	if err != nil {
+		return &protocol.Errmsg{Error: err.Error()}, nil
+	}
+	return nil, nil
+}
+
+func (c Cars) LogIn(ctx context.Context, prm *protocol.Userdata) (*protocol.Token, error) {
+	token, err := c.rps.LogIn(ctx, model.UserParams{Nick: prm.Nick, Password: prm.Password})
+	if err != nil {
+		return &protocol.Token{}, err
+	}
+	return &protocol.Token{Token: token}, nil
 }
 
 func (c Cars) Create(ctx context.Context, prm *protocol.Carparams) (*protocol.Errmsg, error) {
