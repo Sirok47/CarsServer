@@ -25,10 +25,10 @@ type Carparams struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Carbrand  string `protobuf:"bytes,1,opt,name=carbrand,proto3" json:"carbrand,omitempty"`
-	Carnumber int32  `protobuf:"varint,2,opt,name=carnumber,proto3" json:"carnumber,omitempty"`
+	CarBrand  string `protobuf:"bytes,1,opt,name=carbrand,proto3" json:"carbrand,omitempty"`
+	CarNumber int32  `protobuf:"varint,2,opt,name=carnumber,proto3" json:"carnumber,omitempty"`
 	Mileage   int32  `protobuf:"varint,3,opt,name=mileage,proto3" json:"mileage,omitempty"`
-	Cartype   string `protobuf:"bytes,4,opt,name=cartype,proto3" json:"cartype,omitempty"`
+	CarType   string `protobuf:"bytes,4,opt,name=cartype,proto3" json:"cartype,omitempty"`
 }
 
 func (x *Carparams) Reset() {
@@ -65,14 +65,14 @@ func (*Carparams) Descriptor() ([]byte, []int) {
 
 func (x *Carparams) GetCarbrand() string {
 	if x != nil {
-		return x.Carbrand
+		return x.CarBrand
 	}
 	return ""
 }
 
 func (x *Carparams) GetCarnumber() int32 {
 	if x != nil {
-		return x.Carnumber
+		return x.CarNumber
 	}
 	return 0
 }
@@ -86,7 +86,7 @@ func (x *Carparams) GetMileage() int32 {
 
 func (x *Carparams) GetCartype() string {
 	if x != nil {
-		return x.Cartype
+		return x.CarType
 	}
 	return ""
 }
