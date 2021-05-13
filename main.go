@@ -19,6 +19,12 @@ func main() {
 	srv := grpc.NewServer()
 	srvobj := service.NewService(dbconn)
 	protocol.RegisterCarsServer(srv, srvobj)
-	l, _ := net.Listen("tcp", ":8080")
-	srv.Serve(l)
+	l, err := net.Listen("tcp", ":8080")
+	if err != nil {
+		fmt.Print(err)
+	}
+	err = srv.Serve(l)
+	if err != nil {
+		fmt.Print(err)
+	}
 }
