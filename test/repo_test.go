@@ -31,7 +31,10 @@ func TestSignUp(t *testing.T) {
 			t.Errorf("DB issue while deleting")
 		}
 	}
-	err = r.SignUp(context.Background(), "", "")
+}
+
+func TestSignUp_Error(t *testing.T) {
+	err := r.SignUp(context.Background(), "", "")
 	if err == nil {
 		t.Errorf("SignUp() got no err witn incorrect nick length")
 	}
@@ -45,7 +48,10 @@ func TestLogIn(t *testing.T) {
 	if token == "" {
 		t.Errorf("LogIn() returned token is empty")
 	}
-	token, err = r.LogIn(context.Background(), "keklik", "qpwoerutyM123")
+}
+
+func TestLogIn_Error(t *testing.T) {
+	token, err := r.LogIn(context.Background(), "keklik", "qpwoerutyM123")
 	if err == nil {
 		t.Errorf("LogIn() no err with incorrect password")
 	}
@@ -59,7 +65,10 @@ func TestCreate(t *testing.T) {
 	if err != nil {
 		t.Errorf("Create() got err %v", err.Error())
 	}
-	err = r.Create(context.Background(), "test", 470, "test", 1000)
+}
+
+func TestCreate_Error(t *testing.T) {
+	err := r.Create(context.Background(), "test", 470, "test", 1000)
 	if err == nil {
 		t.Errorf("Create() no err with incorrect number")
 	}
@@ -70,7 +79,10 @@ func TestUpdate(t *testing.T) {
 	if err != nil {
 		t.Errorf("Update() got err %v", err.Error())
 	}
-	err = r.Update(context.Background(), 0, 1111)
+}
+
+func TestUpdate_Error(t *testing.T) {
+	err := r.Update(context.Background(), 0, 1111)
 	if err == nil {
 		t.Errorf("Update() got no err with nonexisting number")
 	}
@@ -84,7 +96,10 @@ func TestGet(t *testing.T) {
 	if car == nil {
 		t.Errorf("Get() returned value is nil")
 	}
-	car, err = r.Get(context.Background(), 0)
+}
+
+func TestGet_Error(t *testing.T) {
+	car, err := r.Get(context.Background(), 0)
 	if err == nil {
 		t.Errorf("got no err getting nonexisting car")
 	}
@@ -98,7 +113,10 @@ func TestDelete(t *testing.T) {
 	if err != nil {
 		t.Errorf("Delete() got err %v", err.Error())
 	}
-	err = r.Delete(context.Background(), 0)
+}
+
+func TestDelete_Error(t *testing.T) {
+	err := r.Delete(context.Background(), 0)
 	if err == nil {
 		t.Errorf("Delete() got no err deleting nonexisting car")
 	}
