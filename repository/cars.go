@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"github.com/Sirok47/CarsServer/model"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jackc/pgx/v4"
@@ -17,14 +18,17 @@ func NewCars(db *pgx.Conn) *Cars {
 	return &Cars{db: db}
 }
 
-func (r Cars) SignUp(ctx context.Context, g *model.User) error {
-	_, err := r.db.Exec(ctx, "insert into users (nick,password) values ($1,$2)", g.Nick, g.Password)
+func (r Cars) SignUp(ctx context.Context, nick string, password string) error {
+	if nick == "" || len(nick) > 20 {
+		return errors.New("incorrect nick length")
+	}
+	_, err := r.db.Exec(ctx, "insert into users (nick,password) values ($1,$2)", nick, password)
 	return err
 }
 
-func (r Cars) LogIn(ctx context.Context, user *model.User) (string, error) {
+func (r Cars) LogIn(ctx context.Context, nick string, password string) (string, error) {
 	trueuser := &model.User{}
-	result, err := r.db.Query(ctx, "select * from users where nick = $1", user.Nick)
+	result, err := r.db.Query(ctx, "select * from users where nick = $1", nick)
 	if err != nil {
 		return "", err
 	}
@@ -35,7 +39,7 @@ func (r Cars) LogIn(ctx context.Context, user *model.User) (string, error) {
 			return "", err
 		}
 	}
-	if user.Password == trueuser.Password {
+	if password == trueuser.Password {
 		token := jwt.New(jwt.SigningMethodHS256)
 		claims := token.Claims.(jwt.MapClaims)
 		claims["exp"] = time.Now().Add(time.Hour).Unix()
@@ -48,8 +52,11 @@ func (r Cars) LogIn(ctx context.Context, user *model.User) (string, error) {
 	return "", echo.ErrUnauthorized
 }
 
-func (r Cars) Create(ctx context.Context, g *model.Car) error {
-	_, err := r.db.Exec(ctx, "insert into cars (carbrand,carnumber,type,mileage) values ($1,$2,$3,$4)", g.CarBrand, g.CarNumber, g.CarType, g.Mileage)
+func (r Cars) Create(ctx context.Context, brand string, num int, car_type string, mileage int) error {
+	if num < 1000 || num > 9999 {
+		return errors.New("wrong CarNumber")
+	}
+	_, err := r.db.Exec(ctx, "insert into cars (carbrand,carnumber,type,mileage) values ($1,$2,$3,$4)", brand, num, car_type, mileage)
 	return err
 }
 
@@ -66,15 +73,30 @@ func (r Cars) Get(ctx context.Context, num int) (*model.Car, error) {
 			return nil, err
 		}
 	}
+	if c.CarNumber == 0 {
+		return nil, errors.New("nonexistent car")
+	}
 	return c, nil
 }
 
-func (r Cars) Update(ctx context.Context, c *model.Car) error {
-	_, err := r.db.Exec(ctx, "update cars set mileage = $1 where carnumber = $2", c.Mileage, c.CarNumber)
+func (r Cars) Update(ctx context.Context, num int, mileage int) error {
+	res, err := r.db.Exec(ctx, "update cars set mileage = $1 where carnumber = $2", mileage, num)
+	if res == nil {
+		return err
+	}
+	if res.RowsAffected() == 0 {
+		return errors.New("nonexistent car")
+	}
 	return err
 }
 
 func (r Cars) Delete(ctx context.Context, num int) error {
-	_, err := r.db.Exec(ctx, "delete from cars where carnumber = $1", num)
+	res, err := r.db.Exec(ctx, "delete from cars where carnumber = $1", num)
+	if res == nil {
+		return err
+	}
+	if res.RowsAffected() == 0 {
+		return errors.New("nonexistent car")
+	}
 	return err
 }
