@@ -2,8 +2,9 @@ package test
 
 import (
 	"context"
+	"github.com/Sirok47/CarsServer/model"
 	"github.com/Sirok47/CarsServer/repository"
-	"github.com/jackc/pgconn"
+	"github.com/google/go-cmp/cmp"
 	"github.com/jackc/pgx/v4"
 	"os"
 	"testing"
@@ -12,26 +13,24 @@ import (
 var (
 	dbconn *pgx.Conn
 	r      *repository.Cars
-	res    pgconn.CommandTag
 )
 
 func TestMain(m *testing.M) {
-	dbconn, _ = pgx.Connect(context.Background(), "postgres://maks:glazirovanniisirok@127.0.0.1:5432/cars")
+	dbconn, _ = pgx.Connect(context.Background(), "postgres://maks:glazirovanniisirok@127.0.0.1:5432/testcars")
 	r = repository.NewCars(dbconn)
-	os.Exit(m.Run())
+	dbconn.Exec(context.Background(), "insert into users (nick, password) values ($1,$2)", "keklik", "qpwoeirutyM123")
+	dbconn.Exec(context.Background(), "insert into cars (carbrand,carnumber,type,mileage) values ($1,$2,$3,$4)", "brand", 1331, "type", 1111)
+	exitCode := m.Run()
+	dbconn.Exec(context.Background(), "delete from cars")
+	dbconn.Exec(context.Background(), "delete from users")
+	os.Exit(exitCode)
 }
 
 func TestSignUp(t *testing.T) {
 	err := r.SignUp(context.Background(), "tester", "glazirok")
 	if err != nil {
 		t.Errorf("SignUp() got err %v", err.Error())
-		return
 	}
-	res, err = dbconn.Exec(context.Background(), "delete from users where nick = $1", "tester")
-	if err != nil || res.RowsAffected() == 0 {
-		t.Errorf("DB issue while deleting")
-	}
-
 }
 
 func TestSignUp_Error(t *testing.T) {
@@ -62,7 +61,7 @@ func TestLogIn_Error(t *testing.T) {
 }
 
 func TestCreate(t *testing.T) {
-	err := r.Create(context.Background(), "test", 1331, "test", 1000)
+	err := r.Create(context.Background(), "test", 5000, "test", 1000)
 	if err != nil {
 		t.Errorf("Create() got err %v", err.Error())
 	}
@@ -76,7 +75,7 @@ func TestCreate_Error(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	err := r.Update(context.Background(), 1331, 1111)
+	err := r.Update(context.Background(), 1331, 1112)
 	if err != nil {
 		t.Errorf("Update() got err %v", err.Error())
 	}
@@ -98,7 +97,7 @@ func TestGet(t *testing.T) {
 		t.Errorf("Get() returned value is nil")
 		return
 	}
-	if car.CarNumber == 0 || car.Mileage == 0 || car.CarType == "" || car.CarBrand == "" {
+	if cmp.Equal(car, &model.Car{CarBrand: "brand", CarType: "type", CarNumber: 1331, Mileage: 1111}) {
 		t.Errorf("Get(): incorrect parsing")
 	}
 }
