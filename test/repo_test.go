@@ -25,12 +25,13 @@ func TestSignUp(t *testing.T) {
 	err := r.SignUp(context.Background(), "tester", "glazirok")
 	if err != nil {
 		t.Errorf("SignUp() got err %v", err.Error())
-	} else {
-		res, err = dbconn.Exec(context.Background(), "delete from users where nick = $1", "tester")
-		if err != nil || res.RowsAffected() == 0 {
-			t.Errorf("DB issue while deleting")
-		}
+		return
 	}
+	res, err = dbconn.Exec(context.Background(), "delete from users where nick = $1", "tester")
+	if err != nil || res.RowsAffected() == 0 {
+		t.Errorf("DB issue while deleting")
+	}
+
 }
 
 func TestSignUp_Error(t *testing.T) {
@@ -95,6 +96,10 @@ func TestGet(t *testing.T) {
 	}
 	if car == nil {
 		t.Errorf("Get() returned value is nil")
+		return
+	}
+	if car.CarNumber == 0 || car.Mileage == 0 || car.CarType == "" || car.CarBrand == "" {
+		t.Errorf("Get(): incorrect parsing")
 	}
 }
 
