@@ -17,7 +17,7 @@ func NewService(db *pgx.Conn) *Cars {
 }
 
 func (c Cars) SignUp(ctx context.Context, prm *protocol.Userdata) (*protocol.Errmsg, error) {
-	err := c.rps.SignUp(ctx, model.UserParams{Nick: prm.Nick, Password: prm.Password})
+	err := c.rps.SignUp(ctx, &model.User{Nick: prm.Nick, Password: prm.Password})
 	if err != nil {
 		return &protocol.Errmsg{Error: err.Error()}, nil
 	}
@@ -25,7 +25,7 @@ func (c Cars) SignUp(ctx context.Context, prm *protocol.Userdata) (*protocol.Err
 }
 
 func (c Cars) LogIn(ctx context.Context, prm *protocol.Userdata) (*protocol.Token, error) {
-	token, err := c.rps.LogIn(ctx, model.UserParams{Nick: prm.Nick, Password: prm.Password})
+	token, err := c.rps.LogIn(ctx, &model.User{Nick: prm.Nick, Password: prm.Password})
 	if err != nil {
 		return &protocol.Token{}, err
 	}
@@ -33,7 +33,7 @@ func (c Cars) LogIn(ctx context.Context, prm *protocol.Userdata) (*protocol.Toke
 }
 
 func (c Cars) Create(ctx context.Context, prm *protocol.Carparams) (*protocol.Errmsg, error) {
-	err := c.rps.Create(ctx, model.CarParams{CarBrand: prm.CarBrand, CarNumber: int(prm.CarNumber), CarType: prm.CarType, Mileage: int(prm.Mileage)})
+	err := c.rps.Create(ctx, &model.Car{CarBrand: prm.CarBrand, CarNumber: int(prm.CarNumber), CarType: prm.CarType, Mileage: int(prm.Mileage)})
 	if err != nil {
 		return &protocol.Errmsg{Error: err.Error()}, nil
 	}
@@ -49,7 +49,7 @@ func (c Cars) Delete(ctx context.Context, prm *protocol.Carparams) (*protocol.Er
 }
 
 func (c Cars) Update(ctx context.Context, prm *protocol.Carparams) (*protocol.Errmsg, error) {
-	err := c.rps.Update(ctx, &model.CarParams{CarNumber: int(prm.CarNumber), Mileage: int(prm.Mileage)})
+	err := c.rps.Update(ctx, &model.Car{CarNumber: int(prm.CarNumber), Mileage: int(prm.Mileage)})
 	if err != nil {
 		return &protocol.Errmsg{Error: err.Error()}, nil
 	}

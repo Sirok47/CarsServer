@@ -17,13 +17,13 @@ func NewCars(db *pgx.Conn) *Cars {
 	return &Cars{db: db}
 }
 
-func (r Cars) SignUp(ctx context.Context, g model.UserParams) error {
+func (r Cars) SignUp(ctx context.Context, g *model.User) error {
 	_, err := r.db.Exec(ctx, "insert into users (nick,password) values ($1,$2)", g.Nick, g.Password)
 	return err
 }
 
-func (r Cars) LogIn(ctx context.Context, user model.UserParams) (string, error) {
-	trueuser := model.UserParams{}
+func (r Cars) LogIn(ctx context.Context, user *model.User) (string, error) {
+	trueuser := &model.User{}
 	result, err := r.db.Query(ctx, "select * from users where nick = $1", user.Nick)
 	if err != nil {
 		return "", err
@@ -35,7 +35,7 @@ func (r Cars) LogIn(ctx context.Context, user model.UserParams) (string, error) 
 			return "", err
 		}
 	}
-	if user == trueuser {
+	if user.Password == trueuser.Password {
 		token := jwt.New(jwt.SigningMethodHS256)
 		claims := token.Claims.(jwt.MapClaims)
 		claims["exp"] = time.Now().Add(time.Hour).Unix()
@@ -48,13 +48,13 @@ func (r Cars) LogIn(ctx context.Context, user model.UserParams) (string, error) 
 	return "", echo.ErrUnauthorized
 }
 
-func (r Cars) Create(ctx context.Context, g model.CarParams) error {
+func (r Cars) Create(ctx context.Context, g *model.Car) error {
 	_, err := r.db.Exec(ctx, "insert into cars (carbrand,carnumber,type,mileage) values ($1,$2,$3,$4)", g.CarBrand, g.CarNumber, g.CarType, g.Mileage)
 	return err
 }
 
-func (r Cars) Get(ctx context.Context, num int) (*model.CarParams, error) {
-	c := &model.CarParams{CarNumber: num}
+func (r Cars) Get(ctx context.Context, num int) (*model.Car, error) {
+	c := &model.Car{CarNumber: num}
 	result, err := r.db.Query(ctx, "select * from cars where carnumber = $1", c.CarNumber)
 	if err != nil {
 		return nil, err
@@ -69,7 +69,7 @@ func (r Cars) Get(ctx context.Context, num int) (*model.CarParams, error) {
 	return c, nil
 }
 
-func (r Cars) Update(ctx context.Context, c *model.CarParams) error {
+func (r Cars) Update(ctx context.Context, c *model.Car) error {
 	_, err := r.db.Exec(ctx, "update cars set mileage = $1 where carnumber = $2", c.Mileage, c.CarNumber)
 	return err
 }
