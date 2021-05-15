@@ -18,19 +18,17 @@ var (
 func TestMain(m *testing.M) {
 	dbconn, _ = pgx.Connect(context.Background(), "postgres://maks:glazirovanniisirok@127.0.0.1:5432/testcars")
 	r = repository.NewCars(dbconn)
-	dbconn.Exec(context.Background(), "insert into users (nick, password) values ($1,$2)", "keklik", "qpwoeirutyM123")
-	dbconn.Exec(context.Background(), "insert into cars (carbrand,carnumber,type,mileage) values ($1,$2,$3,$4)", "brand", 1331, "type", 1111)
 	exitCode := m.Run()
-	dbconn.Exec(context.Background(), "delete from cars")
-	dbconn.Exec(context.Background(), "delete from users")
 	os.Exit(exitCode)
 }
 
 func TestSignUp(t *testing.T) {
+	dbconn.Exec(context.Background(), "insert into users (nick, password) values ($1,$2)", "keklik", "qpwoeirutyM123")
 	err := r.SignUp(context.Background(), "tester", "glazirok")
 	if err != nil {
 		t.Errorf("SignUp() got err %v", err.Error())
 	}
+	dbconn.Exec(context.Background(), "delete from users")
 }
 
 func TestSignUp_Error(t *testing.T) {
@@ -41,6 +39,7 @@ func TestSignUp_Error(t *testing.T) {
 }
 
 func TestLogIn(t *testing.T) {
+	dbconn.Exec(context.Background(), "insert into users (nick, password) values ($1,$2)", "keklik", "qpwoeirutyM123")
 	token, err := r.LogIn(context.Background(), "keklik", "qpwoeirutyM123")
 	if err != nil {
 		t.Errorf("LogIn() got err %v", err.Error())
@@ -48,9 +47,11 @@ func TestLogIn(t *testing.T) {
 	if token == "" {
 		t.Errorf("LogIn() returned token is empty")
 	}
+	dbconn.Exec(context.Background(), "delete from users")
 }
 
 func TestLogIn_Error(t *testing.T) {
+	dbconn.Exec(context.Background(), "insert into users (nick, password) values ($1,$2)", "keklik", "qpwoeirutyM123")
 	token, err := r.LogIn(context.Background(), "keklik", "qpwoerutyM123")
 	if err == nil {
 		t.Errorf("LogIn() no err with incorrect password")
@@ -58,6 +59,7 @@ func TestLogIn_Error(t *testing.T) {
 	if token != "" {
 		t.Errorf("LogIn() expected empty token, got %v", token)
 	}
+	dbconn.Exec(context.Background(), "delete from users")
 }
 
 func TestCreate(t *testing.T) {
@@ -65,6 +67,7 @@ func TestCreate(t *testing.T) {
 	if err != nil {
 		t.Errorf("Create() got err %v", err.Error())
 	}
+	dbconn.Exec(context.Background(), "delete from cars")
 }
 
 func TestCreate_Error(t *testing.T) {
@@ -72,13 +75,16 @@ func TestCreate_Error(t *testing.T) {
 	if err == nil {
 		t.Errorf("Create() no err with incorrect number")
 	}
+	dbconn.Exec(context.Background(), "delete from cars")
 }
 
 func TestUpdate(t *testing.T) {
+	dbconn.Exec(context.Background(), "insert into cars (carbrand,carnumber,type,mileage) values ($1,$2,$3,$4)", "brand", 1331, "type", 1111)
 	err := r.Update(context.Background(), 1331, 1112)
 	if err != nil {
 		t.Errorf("Update() got err %v", err.Error())
 	}
+	dbconn.Exec(context.Background(), "delete from cars")
 }
 
 func TestUpdate_Error(t *testing.T) {
@@ -89,6 +95,7 @@ func TestUpdate_Error(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
+	dbconn.Exec(context.Background(), "insert into cars (carbrand,carnumber,type,mileage) values ($1,$2,$3,$4)", "brand", 1331, "type", 1111)
 	car, err := r.Get(context.Background(), 1331)
 	if err != nil {
 		t.Errorf("Get() got err %v", err.Error())
@@ -97,9 +104,10 @@ func TestGet(t *testing.T) {
 		t.Errorf("Get() returned value is nil")
 		return
 	}
-	if cmp.Equal(car, &model.Car{CarBrand: "brand", CarType: "type", CarNumber: 1331, Mileage: 1111}) {
+	if !cmp.Equal(car, &model.Car{CarBrand: "brand", CarType: "type", CarNumber: 1331, Mileage: 1111}) {
 		t.Errorf("Get(): incorrect parsing")
 	}
+	dbconn.Exec(context.Background(), "delete from cars")
 }
 
 func TestGet_Error(t *testing.T) {
@@ -113,10 +121,12 @@ func TestGet_Error(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
+	dbconn.Exec(context.Background(), "insert into cars (carbrand,carnumber,type,mileage) values ($1,$2,$3,$4)", "brand", 1331, "type", 1111)
 	err := r.Delete(context.Background(), 1331)
 	if err != nil {
 		t.Errorf("Delete() got err %v", err.Error())
 	}
+	dbconn.Exec(context.Background(), "delete from cars")
 }
 
 func TestDelete_Error(t *testing.T) {
