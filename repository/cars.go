@@ -19,7 +19,12 @@ func NewCars(db *pgx.Conn) *Cars {
 }
 
 type CarsInt interface {
+	SignUp(ctx context.Context, nick string, password string) error
+	LogIn(ctx context.Context, nick string, password string) (string, error)
 	Create(ctx context.Context, brand string, num int, car_type string, mileage int) error
+	Get(ctx context.Context, num int) (*model.Car, error)
+	Update(ctx context.Context, num int, mileage int) error
+	Delete(ctx context.Context, num int) error
 }
 
 func (r Cars) SignUp(ctx context.Context, nick string, password string) error {

@@ -8,16 +8,11 @@ import (
 )
 
 type Cars struct {
-	inter CarsInterface
-	rps   *repository.Cars
+	rps repository.CarsInt
 }
 
 func NewService(db *pgx.Conn) *Cars {
 	return &Cars{rps: repository.NewCars(db)}
-}
-
-type CarsInterface interface {
-	Create(ctx context.Context, prm *protocol.Carparams) (*protocol.Errmsg, error)
 }
 
 func (c Cars) SignUp(ctx context.Context, prm *protocol.Userdata) (*protocol.Errmsg, error) {
