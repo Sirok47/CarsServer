@@ -1,9 +1,8 @@
-package test
+package repository
 
 import (
 	"context"
 	"github.com/Sirok47/CarsServer/model"
-	"github.com/Sirok47/CarsServer/repository"
 	"github.com/google/go-cmp/cmp"
 	"github.com/jackc/pgx/v4"
 	"os"
@@ -12,12 +11,12 @@ import (
 
 var (
 	dbconn *pgx.Conn
-	r      *repository.Cars
+	r      *Cars
 )
 
 func TestMain(m *testing.M) {
 	dbconn, _ = pgx.Connect(context.Background(), "postgres://maks:glazirovanniisirok@127.0.0.1:5432/testcars")
-	r = repository.NewCars(dbconn)
+	r = NewCars(dbconn)
 	exitCode := m.Run()
 	os.Exit(exitCode)
 }
@@ -96,6 +95,7 @@ func TestUpdate_Error(t *testing.T) {
 
 func TestGet(t *testing.T) {
 	dbconn.Exec(context.Background(), "insert into cars (carbrand,carnumber,type,mileage) values ($1,$2,$3,$4)", "brand", 1331, "type", 1111)
+	defer dbconn.Exec(context.Background(), "delete from cars")
 	car, err := r.Get(context.Background(), 1331)
 	if err != nil {
 		t.Errorf("Get() got err %v", err.Error())
@@ -107,7 +107,6 @@ func TestGet(t *testing.T) {
 	if !cmp.Equal(car, &model.Car{CarBrand: "brand", CarType: "type", CarNumber: 1331, Mileage: 1111}) {
 		t.Errorf("Get(): incorrect parsing")
 	}
-	dbconn.Exec(context.Background(), "delete from cars")
 }
 
 func TestGet_Error(t *testing.T) {

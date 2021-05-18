@@ -18,6 +18,10 @@ func NewCars(db *pgx.Conn) *Cars {
 	return &Cars{db: db}
 }
 
+type CarsInt interface {
+	Create(ctx context.Context, brand string, num int, car_type string, mileage int) error
+}
+
 func (r Cars) SignUp(ctx context.Context, nick string, password string) error {
 	if nick == "" || len(nick) > 20 {
 		return errors.New("incorrect nick length")

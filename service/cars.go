@@ -8,11 +8,16 @@ import (
 )
 
 type Cars struct {
-	rps *repository.Cars
+	inter CarsInterface
+	rps   *repository.Cars
 }
 
 func NewService(db *pgx.Conn) *Cars {
-	return &Cars{repository.NewCars(db)}
+	return &Cars{rps: repository.NewCars(db)}
+}
+
+type CarsInterface interface {
+	Create(ctx context.Context, prm *protocol.Carparams) (*protocol.Errmsg, error)
 }
 
 func (c Cars) SignUp(ctx context.Context, prm *protocol.Userdata) (*protocol.Errmsg, error) {
@@ -34,7 +39,7 @@ func (c Cars) LogIn(ctx context.Context, prm *protocol.Userdata) (*protocol.Toke
 func (c Cars) Create(ctx context.Context, prm *protocol.Carparams) (*protocol.Errmsg, error) {
 	err := c.rps.Create(ctx, prm.CarBrand, int(prm.CarNumber), prm.CarType, int(prm.Mileage))
 	if err != nil {
-		return &protocol.Errmsg{Error: err.Error()}, nil
+		return &protocol.Errmsg{Error: err.Error()}, err
 	}
 	return nil, nil
 }
