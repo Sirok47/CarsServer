@@ -20,7 +20,7 @@ func (c Cars) SignUp(ctx context.Context, prm *protocol.Userdata) (*protocol.Err
 	if err != nil {
 		return &protocol.Errmsg{Error: err.Error()}, nil
 	}
-	return nil, nil
+	return &protocol.Errmsg{}, nil
 }
 
 func (c Cars) LogIn(ctx context.Context, prm *protocol.Userdata) (*protocol.Token, error) {
@@ -36,7 +36,7 @@ func (c Cars) Create(ctx context.Context, prm *protocol.Carparams) (*protocol.Er
 	if err != nil {
 		return &protocol.Errmsg{Error: err.Error()}, nil
 	}
-	return nil, nil
+	return &protocol.Errmsg{}, nil
 }
 
 func (c Cars) Delete(ctx context.Context, prm *protocol.Carparams) (*protocol.Errmsg, error) {
@@ -44,7 +44,7 @@ func (c Cars) Delete(ctx context.Context, prm *protocol.Carparams) (*protocol.Er
 	if err != nil {
 		return &protocol.Errmsg{Error: err.Error()}, nil
 	}
-	return nil, nil
+	return &protocol.Errmsg{}, nil
 }
 
 func (c Cars) Update(ctx context.Context, prm *protocol.Carparams) (*protocol.Errmsg, error) {
@@ -52,7 +52,7 @@ func (c Cars) Update(ctx context.Context, prm *protocol.Carparams) (*protocol.Er
 	if err != nil {
 		return &protocol.Errmsg{Error: err.Error()}, nil
 	}
-	return nil, nil
+	return &protocol.Errmsg{}, nil
 }
 
 func (c Cars) Get(ctx context.Context, prm *protocol.Carparams) (*protocol.Carparams, error) {
