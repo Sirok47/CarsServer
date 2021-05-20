@@ -48,18 +48,18 @@ func TestSignUp(t *testing.T) {
 	testobj := &mocking{}
 	testobj.On("SignUp", context.Background(), "test", "test").Return(nil)
 	test := Cars{rps: testobj}
-	_, err := test.SignUp(context.Background(), &protocol.Userdata{Nick: "test", Password: "test"})
-	assert.Equal(t, nil, err)
+	err, _ := test.SignUp(context.Background(), &protocol.Userdata{Nick: "test", Password: "test"})
+	if err != nil {
+		t.Errorf("Got %v", err.Error)
+	}
 }
 
 func TestSignUp_Error(t *testing.T) {
 	testobj := &mocking{}
 	testobj.On("SignUp", context.Background(), "test", "test").Return(errors.New("testerror"))
 	test := Cars{rps: testobj}
-	msg, err := test.SignUp(context.Background(), &protocol.Userdata{Nick: "test", Password: "test"})
-	if msg != nil && err != nil {
-		assert.Equal(t, msg.Error, err.Error())
-	} else {
+	err, _ := test.SignUp(context.Background(), &protocol.Userdata{Nick: "test", Password: "test"})
+	if err == nil {
 		t.Errorf("Got no error")
 	}
 }
@@ -88,18 +88,18 @@ func TestCreate(t *testing.T) {
 	testobj := &mocking{}
 	testobj.On("Create", context.Background(), "test", 1111, "test", 1111).Return(nil)
 	test := Cars{rps: testobj}
-	_, err := test.Create(context.Background(), &protocol.Carparams{CarNumber: 1111, CarType: "test", CarBrand: "test", Mileage: 1111})
-	assert.Equal(t, nil, err)
+	err, _ := test.Create(context.Background(), &protocol.Carparams{CarNumber: 1111, CarType: "test", CarBrand: "test", Mileage: 1111})
+	if err != nil {
+		t.Errorf("Got %v", err.Error)
+	}
 }
 
 func TestCreate_Error(t *testing.T) {
 	testobj := &mocking{}
 	testobj.On("Create", context.Background(), "test", 1111, "test", 1111).Return(errors.New("testerror"))
 	test := Cars{rps: testobj}
-	msg, err := test.Create(context.Background(), &protocol.Carparams{CarNumber: 1111, CarType: "test", CarBrand: "test", Mileage: 1111})
-	if msg != nil && err != nil {
-		assert.Equal(t, msg.Error, err.Error())
-	} else {
+	err, _ := test.Create(context.Background(), &protocol.Carparams{CarNumber: 1111, CarType: "test", CarBrand: "test", Mileage: 1111})
+	if err == nil {
 		t.Errorf("Got no error")
 	}
 }
@@ -108,18 +108,18 @@ func TestUpdate(t *testing.T) {
 	testobj := &mocking{}
 	testobj.On("Update", context.Background(), 1111, 1111).Return(nil)
 	test := Cars{rps: testobj}
-	_, err := test.Update(context.Background(), &protocol.Carparams{CarNumber: 1111, Mileage: 1111})
-	assert.Equal(t, nil, err)
+	err, _ := test.Update(context.Background(), &protocol.Carparams{CarNumber: 1111, Mileage: 1111})
+	if err != nil {
+		t.Errorf("Got %v", err.Error)
+	}
 }
 
 func TestUpdate_Error(t *testing.T) {
 	testobj := &mocking{}
 	testobj.On("Update", context.Background(), 1111, 1111).Return(errors.New("testerror"))
 	test := Cars{rps: testobj}
-	msg, err := test.Update(context.Background(), &protocol.Carparams{CarNumber: 1111, Mileage: 1111})
-	if msg != nil && err != nil {
-		assert.Equal(t, msg.Error, err.Error())
-	} else {
+	err, _ := test.Update(context.Background(), &protocol.Carparams{CarNumber: 1111, Mileage: 1111})
+	if err == nil {
 		t.Errorf("Got no error")
 	}
 }
@@ -148,18 +148,18 @@ func TestDelete(t *testing.T) {
 	testobj := &mocking{}
 	testobj.On("Delete", context.Background(), 1111).Return(nil)
 	test := Cars{rps: testobj}
-	_, err := test.Delete(context.Background(), &protocol.Carparams{CarNumber: 1111})
-	assert.Equal(t, nil, err)
+	err, _ := test.Delete(context.Background(), &protocol.Carparams{CarNumber: 1111})
+	if err != nil {
+		t.Errorf("Got %v", err.Error)
+	}
 }
 
 func TestDelete_Error(t *testing.T) {
 	testobj := &mocking{}
 	testobj.On("Delete", context.Background(), 1111).Return(errors.New("testerror"))
 	test := Cars{rps: testobj}
-	msg, err := test.Delete(context.Background(), &protocol.Carparams{CarNumber: 1111})
-	if msg != nil && err != nil {
-		assert.Equal(t, msg.Error, err.Error())
-	} else {
+	err, _ := test.Delete(context.Background(), &protocol.Carparams{CarNumber: 1111})
+	if err == nil {
 		t.Errorf("Got no error")
 	}
 }

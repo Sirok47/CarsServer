@@ -18,7 +18,7 @@ func NewService(db *pgx.Conn) *Cars {
 func (c Cars) SignUp(ctx context.Context, prm *protocol.Userdata) (*protocol.Errmsg, error) {
 	err := c.rps.SignUp(ctx, prm.Nick, prm.Password)
 	if err != nil {
-		return &protocol.Errmsg{Error: err.Error()}, err
+		return &protocol.Errmsg{Error: err.Error()}, nil
 	}
 	return nil, nil
 }
@@ -34,7 +34,7 @@ func (c Cars) LogIn(ctx context.Context, prm *protocol.Userdata) (*protocol.Toke
 func (c Cars) Create(ctx context.Context, prm *protocol.Carparams) (*protocol.Errmsg, error) {
 	err := c.rps.Create(ctx, prm.CarBrand, int(prm.CarNumber), prm.CarType, int(prm.Mileage))
 	if err != nil {
-		return &protocol.Errmsg{Error: err.Error()}, err
+		return &protocol.Errmsg{Error: err.Error()}, nil
 	}
 	return nil, nil
 }
@@ -42,7 +42,7 @@ func (c Cars) Create(ctx context.Context, prm *protocol.Carparams) (*protocol.Er
 func (c Cars) Delete(ctx context.Context, prm *protocol.Carparams) (*protocol.Errmsg, error) {
 	err := c.rps.Delete(ctx, int(prm.CarNumber))
 	if err != nil {
-		return &protocol.Errmsg{Error: err.Error()}, err
+		return &protocol.Errmsg{Error: err.Error()}, nil
 	}
 	return nil, nil
 }
@@ -50,7 +50,7 @@ func (c Cars) Delete(ctx context.Context, prm *protocol.Carparams) (*protocol.Er
 func (c Cars) Update(ctx context.Context, prm *protocol.Carparams) (*protocol.Errmsg, error) {
 	err := c.rps.Update(ctx, int(prm.CarNumber), int(prm.Mileage))
 	if err != nil {
-		return &protocol.Errmsg{Error: err.Error()}, err
+		return &protocol.Errmsg{Error: err.Error()}, nil
 	}
 	return nil, nil
 }
