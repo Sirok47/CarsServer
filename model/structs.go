@@ -1,10 +1,10 @@
 package model
 
 type Car struct {
-	CarBrand  string `json:"CarBrand" validate:"min=3,max=10"`
-	CarNumber int    `json:"CarNumber" validate:"required,min=1000,max=9999"`
-	CarType   string `json:"Type" validate:"min=3,max=10"`
-	Mileage   int    `json:"Mileage" validate:"min=0,max=1000000"`
+	CarBrand  string `json:"CarBrand" validate:"omitempty,min=3,max=10"`
+	CarNumber int    `json:"CarNumber" validate:"required,numeric,len=4"`
+	CarType   string `json:"Type" validate:"omitempty,min=3,max=10"`
+	Mileage   int    `json:"Mileage" validate:"omitempty,numeric,min=0,max=1000000"`
 }
 
 type User struct {
